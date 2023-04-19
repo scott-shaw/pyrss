@@ -1,0 +1,350 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="yuna_arm">
+    
+  <xacro:property name="pi" value="3.14159265" />
+  
+  <xacro:property name="base_mass" value="20" />
+  <xacro:property name="link_one_mass" value="2" />
+  <xacro:property name="link_two_mass" value="4" />
+  <xacro:property name="link_three_mass" value="4" />
+  <xacro:property name="link_four_mass" value="2" />
+  <xacro:property name="wrist_mass" value="1" />
+  <xacro:property name="gripper_mass" value="2" />
+
+  <xacro:property name="base_len" value="0.15" />
+  <xacro:property name="base_rad" value="0.15" />
+
+  <xacro:property name="link_one_length" value="0.1" />
+  <xacro:property name="link_one_width" value="0.05" />
+  <xacro:property name="link_one_height" value="0.25" />
+
+  <xacro:property name="link_two_length" value="0.07" />
+  <xacro:property name="link_two_width" value="0.07" />
+  <xacro:property name="link_two_height" value="0.6" />
+
+  <xacro:property name="link_three_length" value="0.07" />
+  <xacro:property name="link_three_width" value="0.07" />
+  <xacro:property name="link_three_height" value="0.6" />
+
+  <xacro:property name="link_four_length" value="0.07" />
+  <xacro:property name="link_four_width" value="0.07" />
+  <xacro:property name="link_four_height" value="0.2" />
+
+  <xacro:property name="wrist_len" value="0.03" />
+  <xacro:property name="wrist_rad" value="0.05" />
+  
+  <xacro:property name="gripper_length" value="0.2" />
+  <xacro:property name="gripper_width" value="0.3" />
+  <xacro:property name="gripper_height" value="0.05" />
+
+  <xacro:include filename="materials.xacro" />
+  
+  <link name="base_link">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <material name="darkgray"/>
+      <geometry>
+        <cylinder length="${base_len}" radius="${base_rad}"/>
+      </geometry>
+    </visual>
+
+    <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="${base_len}" radius="${base_rad}"/>
+      </geometry>
+    </collision>
+    
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${base_mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="base_rotational_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="link_one"/>
+    <origin xyz="0 0 ${base_len/2}" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>    
+
+  <link name="link_one">
+    <visual>
+        <origin xyz="0 ${link_one_width+((link_two_width-link_one_width)/2)} ${base_len/2+((link_one_height-base_len)/2)}" rpy="0 0 0"/>
+        <material name="darkgray"/>
+      <geometry>
+          <box size="${link_one_length} ${link_one_width} ${link_one_height}"/>
+      </geometry>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 ${link_one_width+((link_two_width-link_one_width)/2)} ${base_len/2+((link_one_height-base_len)/2)}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${link_one_length} ${link_one_width} ${link_one_height}"/>
+      </geometry>
+    </collision>
+    
+    <inertial>
+        <origin xyz="0 ${link_one_width+((link_two_width-link_one_width)/2)} ${base_len/2+((link_one_height-base_len)/2)}" rpy="0 0 0"/>
+        <mass value="${link_one_mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="shoulder_joint" type="revolute">
+    <parent link="link_one"/>
+    <child link="link_two"/>
+    <origin xyz="0 0 ${link_one_height/2}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="${-pi/2}" upper="${pi/2}" effort="10" velocity="${pi/2}"/>
+  </joint>    
+
+
+  <link name="link_two">
+    <visual>
+      <origin xyz="0 0 ${link_two_height/2}" rpy="0 0 0"/>
+      <material name="gray"/>
+      <geometry>
+        <box size="${link_two_length} ${link_two_width} ${link_two_height}"/>
+      </geometry>
+    </visual>
+    
+    <collision>
+      <origin xyz="0 0 ${link_two_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${link_two_length} ${link_two_width} ${link_two_height}"/>
+      </geometry>
+    </collision>
+    
+    <inertial>
+      <origin xyz="0 0 ${link_two_height/2}" rpy="0 0 0"/>
+      <mass value="${link_two_mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+    
+  <joint name="elbow_joint" type="continuous">
+    <parent link="link_two"/>
+    <child link="link_three"/>
+    <origin xyz="0 0 ${link_two_height}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="${-3*pi/4}" upper="${3*pi/4}" effort="10" velocity="${pi/2}"/>
+  </joint>    
+
+  <link name="link_three">
+    <visual>
+        <origin xyz="0 ${link_three_width} ${link_three_height/2}" rpy="0 0 0"/>
+        <material name="gray"/>
+      <geometry>
+        <box size="${link_three_length} ${link_three_width} ${link_three_height}"/>
+      </geometry>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 ${link_three_width} ${link_three_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${link_three_length} ${link_three_width} ${link_three_height}"/>
+      </geometry>
+    </collision>
+    
+    <inertial>
+        <origin xyz="0 ${link_three_width} ${link_three_height/2}" rpy="0 0 0"/>
+        <mass value="${link_three_mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="wrist_joint_rot" type="continuous">
+    <parent link="link_three"/>
+    <child link="link_four"/>
+    <origin xyz="0 0 ${link_three_height}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="${-3*pi/4}" upper="${3*pi/4}" effort="10" velocity="${pi/2}"/>
+  </joint>    
+
+  <link name="link_four">
+    <visual>
+        <origin xyz="0 0 ${link_four_height/2}" rpy="0 0 0"/>
+        <material name="gray"/>
+      <geometry>
+        <box size="${link_four_length} ${link_four_width} ${link_four_height}"/>
+      </geometry>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 0 ${link_four_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${link_four_length} ${link_four_width} ${link_four_height}"/>
+      </geometry>
+    </collision>
+    
+    <inertial>
+        <origin xyz="0 0 ${link_four_height/2}" rpy="0 0 0"/>
+        <mass value="${link_four_mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="wrist_joint" type="continuous">
+    <parent link="link_four"/>
+    <child link="wrist"/>
+    <origin xyz="0 0 ${link_four_height}" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>    
+
+  <link name="wrist">
+    <visual>
+        <origin xyz="0 0 ${wrist_len/2}" rpy="0 0 0"/>
+        <material name="black"/>
+      <geometry>
+        <cylinder length="${wrist_len}" radius="${wrist_rad}"/>
+      </geometry>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 0 ${wrist_len/2}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="${wrist_len}" radius="${wrist_rad}"/>
+      </geometry>
+    </collision>
+    
+    <inertial>
+        <origin xyz="0 0 ${wrist_len/2}" rpy="0 0 0"/>
+        <mass value="${wrist_mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="gripper_joint" type="fixed">
+    <parent link="wrist"/>
+    <child link="gripper"/>
+    <origin xyz="0 0 ${wrist_len}" rpy="0 0 0"/>
+  </joint>    
+
+  <link name="gripper">
+    <visual>
+        <origin xyz="0 0 ${gripper_height/2}" rpy="0 0 0"/>
+        <material name="yellow"/>
+      <geometry>
+          <box size="${gripper_length} ${gripper_width} ${gripper_height}"/>
+      </geometry>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 0 ${gripper_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${gripper_length} ${gripper_width} ${gripper_height}"/>
+      </geometry>
+    </collision>
+    
+    <inertial>
+        <origin xyz="0 0 ${gripper_height/2}" rpy="0 0 0"/>
+        <mass value="${gripper_mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <!-- CYLS -->
+  <joint name="shoulder_cyl" type="fixed">
+    <parent link="link_two"/>
+    <child link="cyl_one"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>    
+
+  <link name="cyl_one">
+    <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <material name="black"/>
+      <geometry>
+        <cylinder length="${link_two_width+0.02}" radius="${link_two_width}"/>
+      </geometry>
+    </visual>
+    
+    <inertial>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <mass value="${wrist_mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+ 
+  <joint name="elbow_cyl" type="fixed">
+    <parent link="link_three"/>
+    <child link="cyl_two"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>    
+
+  <link name="cyl_two">
+    <visual>
+        <origin xyz="0 ${link_two_width/2} 0" rpy="${pi/2} 0 0"/>
+        <material name="black"/>
+      <geometry>
+        <cylinder length="${link_two_width+link_three_width+0.02}" radius="${link_three_width}"/>
+      </geometry>
+    </visual>
+    
+    <inertial>
+        <origin xyz="0 ${link_two_width/2} 0" rpy="${pi/2} 0 0"/>
+        <mass value="${wrist_mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="wrist_cyl" type="fixed">
+    <parent link="link_four"/>
+    <child link="cyl_three"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>    
+
+  <link name="cyl_three">
+    <visual>
+        <origin xyz="0 ${link_four_width/2} 0" rpy="${pi/2} 0 0"/>
+        <material name="black"/>
+      <geometry>
+        <cylinder length="${link_three_width+link_four_width+0.02}" radius="${link_four_width}"/>
+      </geometry>
+    </visual>
+    
+    <inertial>
+        <origin xyz="0 ${link_three_width/2} 0" rpy="${pi/2} 0 0"/>
+        <mass value="${wrist_mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <gazebo reference="base_link"> 
+    <material>Gazebo/DarkGrey</material> 
+  </gazebo>
+  <gazebo reference="link_one"> 
+    <material>Gazebo/DarkGrey</material> 
+  </gazebo>
+  <gazebo reference="link_two"> 
+    <material>Gazebo/Grey</material> 
+  </gazebo>
+  <gazebo reference="link_three"> 
+    <material>Gazebo/Grey</material> 
+  </gazebo>
+  <gazebo reference="link_four"> 
+    <material>Gazebo/Grey</material> 
+  </gazebo>
+
+  <gazebo reference="cyl_one"> 
+    <material>Gazebo/FlatBlack</material> 
+  </gazebo>
+  <gazebo reference="cyl_two"> 
+    <material>Gazebo/FlatBlack</material> 
+  </gazebo>
+  <gazebo reference="cyl_three">
+    <material>Gazebo/FlatBlack</material> 
+  </gazebo>
+
+  <gazebo reference="wrist"> 
+    <material>Gazebo/FlatBlack</material> 
+  </gazebo>
+  <gazebo reference="gripper"> 
+    <material>Gazebo/ZincYellow</material> 
+  </gazebo>
+
+
+
+</robot>

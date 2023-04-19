@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<robot name="box">
+  <material name="brown">
+    <color rgba="0.58 0.29 0.0 1.0"/>
+  </material>
+  <link name="box">
+    <inertial>
+      <mass value="2"/>
+      <!-- Inertia values were calculated to be consistent with the mass and
+           geometry size, assuming a uniform density. -->
+      <inertia ixx="0.0108" ixy="0" ixz="0" iyy="0.0083" iyz="0" izz="0.0042"/>
+    </inertial>
+    <visual>
+      <material name="brown"/>
+      <geometry>
+        <box size=".15 .15 .15"/>
+      </geometry>
+    </visual>
+    <collision name="box">
+      <geometry>
+        <box size=".15 .15 .15"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>
+
