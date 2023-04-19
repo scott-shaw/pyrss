@@ -36,34 +36,6 @@ while True:
 time.sleep(5)
 rrt_four_box(Yuna)
 
-# ===================== RUN =====================
-'''
-for i in range(8):
-
-    arm_control.plan_motion(Yuna, [box_pos[i,0],box_pos[i,1],0.2], [np.pi,0,0])
-    arm_control.execute_motion(75,16)
-    cid = arm_control.grab(Yuna, boxes, i)
-
-    arm_control.plan_motion(Yuna, [box_pos[i,0],box_pos[i,1],0.5], [np.pi,0,0])
-    arm_control.execute_motion(25,16)
-
-    arm_control.plan_motion(Yuna, [-box_pos[i,0],0.6,0.2], [np.pi,0,0])
-    arm_control.execute_motion(75,16)
-    arm_control.release(cid)
-
-    arm_control.plan_motion(Yuna, [-box_pos[i,0],0.6,0.5], [np.pi,0,0])
-    arm_control.execute_motion(25,16)
-'''
-#arm_control.plan_motion(Yuna, [0.8,0.6,0.2], [np.pi,0,0])
-#arm_control.execute_motion(75,16)
-#cid = arm_control.grab(Yuna, boxes, 7)
-
-#arm_control.plan_motion(Yuna, [-0.8,0.6,0.2], [np.pi,0,0])
-#arm_control.execute_motion(75,16)
-#arm_control.release(cid)
-
-#arm_control.plan_motion(Yuna, [0,0,0], [0,0,0])
-#arm_control.execute_motion(75,16)
 
 pybl.disconnect()
 
