@@ -18,7 +18,7 @@ def plan_motion(robot, pos, orn):
 
 def execute_motion(robot, ompl_interface, start, goal):
     robot.set_state(start)
-    res, path = ompl_interface.plan(goal)
+    _, path = ompl_interface.plan(goal)
     #if res:
     ompl_interface.execute(path, dynamics=True)
     return path
@@ -29,7 +29,11 @@ def execute_motion_simple(duration, step):
         time.sleep(1./step)
 
 def grab(robot, boxes, box_id):
-    return pybl.createConstraint(robot,4,int(boxes[box_id]),-1,pybl.JOINT_FIXED,[0, 0, 0], [0, 0, 0], [0, 0, 0])
+    #_, cube_orn = pybl.getBasePositionAndOrientation(int(boxes[box_id]))
+    cube_orn = pybl.getQuaternionFromEuler([0, np.pi, np.pi])
+    id = pybl.createConstraint(robot,5,int(boxes[box_id]),-1,pybl.JOINT_FIXED,jointAxis=[0, 0, 0], parentFramePosition=[0, 0, 0.1], childFramePosition=[0, 0, 0], childFrameOrientation=cube_orn)
+    pybl.changeConstraint(id, maxForce=999999)
+    return id
 
 def release(con_id):
     pybl.removeConstraint(con_id)

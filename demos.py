@@ -11,29 +11,33 @@ def rrt_four_box(Yuna):
 
     robot = pb_ompl.PbOMPLRobot(Yuna)
     ompl_interface = pb_ompl.PbOMPL(robot, boxes)
-    ompl_interface.set_planner("RRT")
+    ompl_interface.set_planner("RRTStar")
 
     for i in range(4):
         start, goal = arm_control.plan_motion(Yuna, [box_pos[i,0],box_pos[i,1],0.4], [np.pi,0,0])
         path = arm_control.execute_motion(robot, ompl_interface, start, goal)
 
-        arm_control.plan_motion_simple(Yuna, [box_pos[i,0], box_pos[i,1], 0.2], [np.pi,0,0])
+        arm_control.plan_motion_simple(Yuna, [box_pos[i,0], box_pos[i,1], 0.25], [np.pi,0,0])
         arm_control.execute_motion_simple(25,16)
         cid = arm_control.grab(Yuna, boxes, i)
+        arm_control.execute_motion_simple(10,16)
+      
 
         arm_control.plan_motion_joints(Yuna, [0,0,0,0,0])
-        arm_control.execute_motion_simple(75,16)
+        arm_control.execute_motion_simple(50,16)
 
         start, goal = arm_control.plan_motion(Yuna, [-box_pos[i,0],box_pos[i,1],0.4], [np.pi,0,0])
         path = arm_control.execute_motion(robot, ompl_interface, start, goal)
         
-        arm_control.plan_motion_simple(Yuna, [-box_pos[i,0], box_pos[i,1], 0.2], [np.pi,0,0])
+        arm_control.plan_motion_simple(Yuna, [-box_pos[i,0], box_pos[i,1], 0.25], [np.pi,0,0])
         arm_control.execute_motion_simple(25,16)
         arm_control.release(cid)
+        arm_control.execute_motion_simple(10,16)
         
         arm_control.plan_motion_joints(Yuna, [0,0,0,0,0])
-        arm_control.execute_motion_simple(75,16)
+        arm_control.execute_motion_simple(50,16)
 
 
     while(True):
         continue
+

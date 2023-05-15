@@ -24,6 +24,12 @@ pybl.setRealTimeSimulation(0)
 # load robot model
 Yuna = spawn_robot_arm()
 
+# Print joint info for arm
+print('\nJoint Description:')
+for i in range(pybl.getNumJoints(Yuna)):
+    print(pybl.getJointInfo(Yuna, i))
+print('\n')
+
 '''
 box_orn = pybl.getQuaternionFromEuler([0,0,0])
 box = pybl.loadURDF("urdf/box.urdf",[1,1,0], box_orn, useFixedBase=0)
@@ -33,7 +39,7 @@ while True:
     continue
 '''
 
-time.sleep(5)
+#time.sleep(5)
 rrt_four_box(Yuna)
 
 

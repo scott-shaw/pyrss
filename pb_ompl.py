@@ -20,7 +20,7 @@ from itertools import product
 import copy
 
 INTERPOLATE_NUM = 500
-DEFAULT_PLANNING_TIME = 5
+DEFAULT_PLANNING_TIME = 1
 
 class PbOMPLRobot():
     '''
